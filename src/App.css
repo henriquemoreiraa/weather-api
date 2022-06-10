@@ -15,12 +15,19 @@ body {
   background-color: #f9f9f9;
 }
 
+.carregando {
+  margin-top: 40px;
+  font-weight: 600;
+  font-size: 25px;
+  text-align: center;
+}
+
 .weatherInfo {
   margin-top: 40px;
   text-align: center;
   padding: 40px 20px;
   background-color: #fff;
-  box-shadow: 0px 0px 3px #cecece;
+  box-shadow: 0px 0px 3px #c6c4c4;
   border-radius: 15px;
 }
 
@@ -55,7 +62,7 @@ body {
   margin: 0;
 }
 
-.wind {
+.windHumidity {
   margin-top: 15px;
   border-top: 1px solid #c6c4c4;
   border-bottom: 1px solid #c6c4c4;
@@ -63,7 +70,7 @@ body {
   align-items: center;
   width: 100%;
 }
-.windKMH {
+.winHumInfos {
   width: 100%;
   display: flex;
   justify-content: space-between;
@@ -84,7 +91,31 @@ body {
   border-radius: 15px;
 }
 
+.search {
+  display: flex;
+  justify-content: center;
+  width: 100%;
 
+}
+
+input {
+  padding: 10px;
+  width: 280px;
+  border-radius: 10px 0px 0px 10px;
+  border: 1px solid #c6c4c4;
+  outline: none;
+  font-size: 18px;
+}
+
+button {
+  border-radius: 0px 10px 10px 0px;
+  border: 1px solid #c6c4c4;
+  border-left: none;
+  outline: none;
+  padding: 10px;
+  width: 60px;
+  cursor: pointer;
+}
 
 
 h2 {

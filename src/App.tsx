@@ -1,24 +1,25 @@
-import { useEffect, useState, useSyncExternalStore } from 'react';
 import axios from 'axios';
+import { useEffect, useState } from 'react';
+import { Cloud, FeelsLike, Search } from './svgs';
 import './App.css';
-import { Cloud, FeelsLike } from './svgs'
 
 type coordenates = {
   lon: string;
-  lat: string
+  lat: string;
 }
 
 const App = () => {
-  const [weatherData ,setWeatherData] = useState()
+  const [weatherData, setWeatherData] = useState()
+  const [cityCountry, setCityCountry] = useState()
   const [coords, setCoords] = useState<coordenates[]>()
-  const [currentLocation, setCurrentLocation] = useState(false)
-  const [localName, setLocaName] = useState('')
-  const [city, setCity] = useState()
+  const [currentLocation, setCurrentLocation] = useState<boolean>(false)
+  const [localName, setLocalName] = useState<string>('')
  
   const getCoords = () => {
     axios.get(`https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${localName}`)
     .then(res => {
       setCoords(res.data)
+      setLocalName('')
     })
   }
  
@@ -30,7 +31,7 @@ const App = () => {
     })
     axios.get(`https://weather-proxy.freecodecamp.rocks/api/current?lat=${lat}&lon=${lon}`)
      .then(res => {
-       setCity(res.data)
+      setCityCountry(res.data)
      })
   }
 
@@ -39,7 +40,7 @@ const App = () => {
       getWeather(position.coords.latitude, position.coords.longitude)
       setCurrentLocation(true)
     })
-  }, [!currentLocation])
+  }, [])
 
   useEffect(() => {
     coords?.map(item => {
@@ -48,48 +49,74 @@ const App = () => {
     })
   }, [coords !== undefined])
 
+  useEffect(() => {
+    document.addEventListener('keydown', handleKeyPress);
+    return () => {
+        document.removeEventListener('keydown', handleKeyPress)
+    }
+}, [localName]);
+
+const handleKeyPress = (e: any) => {
+    if (e.key === 'Enter') {
+      getCoords();
+    }
+}
+
   return (
     <div className='container'>
-      <div>
-        <input onChange={(e) => setLocaName(e.target.value)} type="text" />
-        <button onClick={getCoords}>search</button>
+      <div className='search'>
+        <input 
+          value={localName} 
+          autoFocus
+          placeholder='Search' 
+          onChange={(e) => setLocalName(e.target.value)} 
+          type="text" 
+        />
+        <button 
+          onClick={getCoords}>
+            <Search />
+        </button>
       </div>
 
-      {city === undefined || weatherData === undefined ? (
-            <div>carregando...</div>
+      {cityCountry === undefined || weatherData === undefined ? (
+            <div className='carregando'>
+              {!currentLocation ? 'Allow location or search for any location above' : 'Loading...'}
+            </div>
             ) : (
               <div className='weatherInfo'>
-                <h2>{city['name']}, {city['sys']['country']}</h2>
+                <h2>{cityCountry['name']}, {cityCountry['sys']['country']}</h2>
 
                 <div className='temp'>
-                  <img  src={`http://openweathermap.org/img/wn/${weatherData['current']['weather'][0]['icon']}@2x.png`}/>
+                  <img src={`http://openweathermap.org/img/wn/${weatherData['current']['weather'][0]['icon']}@2x.png`}/>
                   <h1>{parseInt(weatherData['current']['temp'])}°</h1>
                 </div>
 
                 <div className='description'>
                   <Cloud />
+
                   <h3 className='descH3'>{weatherData['current']['weather'][0]['main']} | {weatherData['current']['weather'][0]['description']}</h3>
                   <FeelsLike />
+
                   <h3 className='feelsLikeH3'> Feels like {parseInt(weatherData['current']['feels_like'])}°</h3>
                 </div>
 
-                <div className='wind'>
+                <div className='windHumidity'>
                   <div className='colorDIVwind'></div> 
-                  <div className='windKMH'>
+
+                  <div className='winHumInfos'>
                     <p>WIND </p>
                     <p>{weatherData['current']['wind_speed']} mt/s</p>
                   </div>
+
                 </div>
-                <div className='wind'>
+                <div className='windHumidity'>
                   <div className='colorDIVumidity'></div> 
-                  <div className='windKMH'>
+
+                  <div className='winHumInfos'>
                     <p>HUMIDITY</p>
                     <p>{weatherData['current']['humidity']}%</p>
                   </div>
-                </div>
-
-                <div>
-
+                  
                 </div>
               </div>
             )
