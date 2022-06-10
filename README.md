@@ -1,4 +1,4 @@
-🎵 Weather API interaction
+☁️ Weather API interaction
 =========================
 
 Weather API interaction, using React and Typescript
