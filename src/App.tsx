@@ -37,7 +37,7 @@ const App = () => {
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(position => {
-      getWeather(-23.539393708415584, -46.904488022971165 )
+      getWeather(position.coords.latitude, position.coords.longitude)
       setCurrentLocation(true)
     })
   }, [])
@@ -116,7 +116,7 @@ const handleKeyPress = (e: any) => {
                     <p>HUMIDITY</p>
                     <p>{weatherData['current']['humidity']}%</p>
                   </div>
-
+                  
                 </div>
               </div>
             )
